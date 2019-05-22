@@ -58,9 +58,8 @@ public class FundMapper {
     }
 
     /**
-     * Updates the Fund value in a Player's file. Use value 0 if a Player is new
-     * and just needs a new File. This overwrites the file so the value needs to
-     * be absolute.
+     * Updates the Fund value in a Player's file. This overwrites the file so
+     * the value needs to be absolute.
      *
      * @param id UUID of the Player
      * @param value New value
@@ -81,6 +80,17 @@ public class FundMapper {
         } catch (Exception e) {
             Logger.getLogger(FundMapper.class.getName()).log(Level.SEVERE, "File could not be overwritten");
         }
+    }
+
+    /**
+     * Updates the Fund value in a Player's file. Sets the value to the default
+     * value. Used to add files for new Players.
+     *
+     * @param id Id of the Player
+     * @throws IllegalArgumentException When a negative value is set but that's
+     */
+    public void changeFunds(UUID id) throws IllegalArgumentException {
+        changeFunds(id, this.plugin.getConfig().getDouble("startFunds"));
     }
 
     private Double readFile(File s) {

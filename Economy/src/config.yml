@@ -2,5 +2,11 @@ negativeFundsAllowed: false
 #Default is false
 auctionTime: 30
 #Default is 30 sec
+startFunds: 200
+#Default is 200
+currencySymbol: H
+#Default is H
+currencyName: Heimi
+#Default is Heimi
 
     

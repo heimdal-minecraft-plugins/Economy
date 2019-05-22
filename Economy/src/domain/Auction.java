@@ -5,6 +5,7 @@
  */
 package domain;
 
+import java.util.Timer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +20,14 @@ public class Auction {
     private double timeLeft;
     private double currentBid;
     private ItemStack items;
-    
-    
+    //private Timer timer;
+
+    public Auction(Player seller, ItemStack items, double time) {
+        this.seller = seller;
+        this.items = items;
+        this.timeLeft = time;
+        //timer=new Timer();
+
+    }
 
 }
