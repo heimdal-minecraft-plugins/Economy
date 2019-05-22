@@ -22,6 +22,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println("Hello World!");
+        loadConfig();
     }
 
     public Auction getAuc() {
@@ -30,6 +31,11 @@ public class Main extends JavaPlugin {
 
     public void initAuction(Auction auc) {
         this.auc = auc;
+    }
+    
+    private void loadConfig() {
+        getConfig().options().copyDefaults(true);//Sets so the config should copy from the default
+        saveConfig();
     }
 
 }

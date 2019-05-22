@@ -1,0 +1,21 @@
+name: Economy
+author: Nick Lersberghe - Lazoh - MyNameIsLego
+version: 1.0
+main: econMain.Main
+description: Plugin that enables an economy. Adds a currency. Allows for money transfer, player shops and auctions.
+commands:
+    removewarp:
+        usage: /<command> [warp name]
+        description: Removes a warp point
+        aliases: [rmwarp, remwarp, rwarp, rmvwarp]
+        
+permissions:
+    econ.configEcon:
+        description: Being able to configurate Economy's settings.
+        default: op
+    econ.Transfer:
+        description: Being able to edit a Player's funds without their consent.
+        default: op
+        
+        
+
