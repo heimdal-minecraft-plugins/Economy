@@ -24,7 +24,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         loadConfig();//Loads the config file into the default config
-        
+
         funds = mapper.getFunds();//Gets all the Players
     }
 
@@ -39,6 +39,14 @@ public class Main extends JavaPlugin {
     private void loadConfig() {
         getConfig().options().copyDefaults(true);//Sets so the config should copy from the default
         saveConfig();
+    }
+
+    public double getFunds(UUID id) {
+        return funds.getOrDefault(id, null);
+    }
+
+    public void changeFunds(UUID id, double value) {
+        funds.replace(id, value);
     }
 
 }
