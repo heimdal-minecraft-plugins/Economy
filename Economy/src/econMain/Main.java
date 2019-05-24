@@ -45,8 +45,8 @@ public class Main extends JavaPlugin {
         return funds.getOrDefault(id, null);
     }
 
-    public void changeFunds(UUID id, double value) {
-        funds.replace(id, value);
+    public void addFunds(UUID id, double value) {
+        funds.replace(id, funds.get(id) + value);
     }
 
 }
