@@ -4,16 +4,16 @@ version: 1.0
 main: econMain.Main
 description: Plugin that enables an economy. Adds a currency. Allows for money transfer, player shops and auctions.
 commands:
-    removewarp:
-        usage: /<command> [warp name]
-        description: Removes a warp point
-        aliases: [rmwarp, remwarp, rwarp, rmvwarp]
+    auction:
+        usage: /<command> [option1] [option2]
+        description: The basic Auction command. Use '/auction info' for info, '/auction time' for remaining time. '/auction [amount] [price]' to start an auction. '/auction bid [price]' to bid on an auction.
+        aliases: [auc]
         
 permissions:
     econ.configEcon:
         description: Being able to configurate Economy's settings.
         default: op
-    econ.Transfer:
+    econ.transfer:
         description: Being able to edit a Player's funds without their consent.
         default: op
         
