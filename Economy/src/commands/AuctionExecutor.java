@@ -2,11 +2,16 @@ package commands;
 
 import domain.Auction;
 import econMain.Main;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,8 +33,6 @@ public class AuctionExecutor implements CommandExecutor {
     }
 
     //auc 'amount' 'price'
-    //auc info
-    //auc time
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
         if (!(cs instanceof Player)) {
@@ -42,9 +45,12 @@ public class AuctionExecutor implements CommandExecutor {
         auc = plugin.getAuc();
 
         switch (args.length) {
+            //auc
             case 0:
                 displayHelpMessage();
                 return true;
+            //auc info
+            //auc time
             case 1:
                 switch (args[1].toLowerCase()) {
                     case "info":
@@ -55,19 +61,23 @@ public class AuctionExecutor implements CommandExecutor {
                         return true;
                 }
                 break;
+            //auc amount price
             case 2:
-                if (args[1].equalsIgnoreCase("bid")) {
-                    bidOnAuction(p, args);
+                if (args[1].equalsIgnoreCase("bid")) {//If it's a bid
+                    return bidOnAuction(p, args);
+                }
+                if (!plugin.hasAuction()) {
+                    p.sendMessage(ChatColor.RED + "No auction going at the moment!");
                     return true;
                 }
                 try {
-                    double amount = Double.parseDouble(args[1]);
+                    int amount = Integer.parseInt(args[1]);
                     double price = Double.parseDouble(args[2]);
                     createAuction(amount, price, p);
                 } catch (NumberFormatException e) {
                     displayHelpMessage(true);
-                    return true;
                 }
+                return true;
 
         }
 
@@ -77,8 +87,8 @@ public class AuctionExecutor implements CommandExecutor {
     /**
      * Displays a help message.
      */
-    private void displayHelpMessage(boolean error) {
-        p.sendMessage(ChatColor.RED + String.format("How to use Auctions:%n%s: %s%n%s: %s%n%s: %s",
+    private void displayHelpMessage(boolean isError) {
+        p.sendMessage((isError ? ChatColor.RED : ChatColor.BLUE) + String.format("How to use Auctions:%n%s: %s%n%s: %s%n%s: %s",
                 "/auction [amount] [price]",
                 "Auctions the amount specified of the item you're currently holding for the specified price",
                 "/auction info",
@@ -100,12 +110,12 @@ public class AuctionExecutor implements CommandExecutor {
      * @param p Player
      * @param args Arguments
      */
-    private void bidOnAuction(Player p, String[] args) {
-//        
-//        
-//        TODO
-//        
-//        
+    private boolean bidOnAuction(Player p, String[] args) {
+        try {
+            return plugin.getAuc().bidOnAuction(p, Double.parseDouble(args[2]));//If the last argument isn't a valid number, throws error
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -121,8 +131,29 @@ public class AuctionExecutor implements CommandExecutor {
         p.sendMessage(ChatColor.BLUE + String.format("%d second%s left in this auction", time, (time == 1L) ? "" : "s"));
     }
 
-    private void createAuction(double amount, double price, Player p) {
-        
+    private void createAuction(int amount, double price, Player p) {
+        PlayerInventory inven = p.getInventory();
+        ItemStack item = inven.getItemInMainHand();
+        int max = item.getMaxStackSize();
+        if (!inven.containsAtLeast(item, amount)) {
+            p.sendMessage(ChatColor.RED + "You don't have enough of that item!");
+            return;
+        }
+
+        List<ItemStack> items = new ArrayList<>();
+
+        if (amount == 1)
+            items.add(item);
+        else {
+            int temp = amount;
+            while (temp > 0) {
+                int min = Math.max(max, temp);
+                items.add(new ItemStack(item.getType(), min));
+                temp -= min;
+            }
+        }
+
+        plugin.setAuc(new Auction(p, price, items, plugin.getConfig().getLong("auctionTime") * 1000, plugin));
     }
 
 }

@@ -5,7 +5,9 @@
  */
 package econMain;
 
+import commands.AuctionExecutor;
 import domain.Auction;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +28,9 @@ public class Main extends JavaPlugin {
         loadConfig();//Loads the config file into the default config
 
         funds = mapper.getFunds();//Gets all the Players
+        
+        this.getCommand("auction").setAliases(Arrays.asList(new String[]{"auc"}));
+        this.getCommand("auction").setExecutor(new AuctionExecutor(this));
     }
 
     public Auction getAuc() {
@@ -42,11 +47,28 @@ public class Main extends JavaPlugin {
     }
 
     public double getFunds(UUID id) {
-        return funds.getOrDefault(id, null);
+        return funds.getOrDefault(id, 0D);
     }
 
     public void addFunds(UUID id, double value) {
-        funds.replace(id, funds.get(id) + value);
+        funds.replace(id, getFunds(id) + value);
     }
+
+    public boolean hasAuction() {
+        return this.auc != null;
+    }
+
+    public boolean removeAuction() {
+        if (this.auc == null)
+            return false;
+        this.auc = null;
+        return true;
+    }
+
+    public void setAuc(Auction auc) {
+        this.auc = auc;
+    }
+    
+    
 
 }

@@ -82,6 +82,8 @@ public class Auction {
 
                 timer.cancel();//Kills the timer
                 timer.purge();//Purges cancelled tasks
+
+                plugin.removeAuction();
             }
         };
     }
