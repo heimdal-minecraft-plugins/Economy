@@ -10,11 +10,14 @@ commands:
         aliases: [auc]
         
 permissions:
-    econ.configEcon:
+    economy.config:
         description: Being able to configurate Economy's settings.
         default: op
-    econ.transfer:
+    economy.transfer:
         description: Being able to edit a Player's funds without their consent.
+        default: op
+    economy.cancel:
+        description: Being able to cancel any Auction.
         default: op
         
         

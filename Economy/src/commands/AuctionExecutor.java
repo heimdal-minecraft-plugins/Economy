@@ -5,7 +5,6 @@ import econMain.Main;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,12 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * Class that serves as the executor for the /auction command.
  *
  * @author Nick
  */
@@ -59,20 +54,26 @@ public class AuctionExecutor implements CommandExecutor {
                     case "time":
                         displayRemainingTime();
                         return true;
+                    case "cancel":
+                        cancelAuction(p);
+                        return true;
+                    default:
+                        displayHelpMessage(true);
+                        return true;
                 }
-                break;
             //auc amount price
             case 2:
-                if (args[1].equalsIgnoreCase("bid")) {//If it's a bid
+                if (args[1].equalsIgnoreCase("bid")) //If it's a bid
                     return bidOnAuction(p, args);
-                }
-                if (!plugin.hasAuction()) {
-                    p.sendMessage(ChatColor.RED + "No auction going at the moment!");
-                    return true;
-                }
+
                 try {
                     int amount = Integer.parseInt(args[1]);
                     double price = Double.parseDouble(args[2]);
+
+                    if (!plugin.hasAuction()) {
+                        p.sendMessage(ChatColor.RED + "No auction going at the moment!");
+                        return true;
+                    }
                     createAuction(amount, price, p);
                 } catch (NumberFormatException e) {
                     displayHelpMessage(true);
@@ -123,7 +124,7 @@ public class AuctionExecutor implements CommandExecutor {
      * active.
      */
     private void displayRemainingTime() {
-        if (this.auc == null) {
+        if (!plugin.hasAuction()) {
             p.sendMessage(ChatColor.RED + "No auction going at the moment!");
             return;
         }
@@ -154,6 +155,19 @@ public class AuctionExecutor implements CommandExecutor {
         }
 
         plugin.setAuc(new Auction(p, price, items, plugin.getConfig().getLong("auctionTime") * 1000, plugin));
+    }
+
+    private void cancelAuction(Player p) {
+        if (!plugin.hasAuction()) {
+            p.sendMessage(ChatColor.RED + "No auction going at the moment!");
+            return;
+        }
+        if (!p.getUniqueId().equals(plugin.getAuc().getSeller().getUniqueId()) || p.hasPermission("economy.cancel")) {;
+            p.sendMessage(ChatColor.RED + "You can't cancel someone else's auction!");
+            return;
+        }
+
+        plugin.getAuc().cancel();
     }
 
 }

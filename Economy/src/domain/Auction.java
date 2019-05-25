@@ -12,7 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.inventory.Inventory;
 import utils.StringUtil;
 
 /**
@@ -80,10 +79,7 @@ public class Auction {
                 }
                 finishAuction();//Finishes the auctions
 
-                timer.cancel();//Kills the timer
-                timer.purge();//Purges cancelled tasks
-
-                plugin.removeAuction();
+                remove();
             }
         };
     }
@@ -212,6 +208,32 @@ public class Auction {
             plugin.getServer().broadcastMessage(ChatColor.GOLD + "ANTI-SNIPE! Added " + EXTRATIME / 1000 + " seconds to the timer!");
         }
         return true;
+    }
+
+    /**
+     * Cancels the Auction
+     */
+    public void cancel() {
+        if (System.currentTimeMillis() - this.end < 5000) {//If less than 5 seconds left
+            seller.sendMessage(ChatColor.RED + "You can't cancel the auction now! ");
+            return;
+        }
+        plugin.getServer().broadcastMessage(ChatColor.RED + "Cancelling the auction!");
+        addItemsToInventory(seller);
+
+        remove();
+
+    }
+
+    private void remove() {
+        timer.cancel();//Kills the timer
+        timer.purge();//Purges cancelled tasks
+
+        plugin.removeAuction();//Removes this Auction
+    }
+
+    public Player getSeller() {
+        return seller;
     }
 
 }

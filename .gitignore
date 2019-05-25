@@ -30,3 +30,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+/nbproject/
+/build.xml
+/manifest.mf
+/lib/nblibraries.properties

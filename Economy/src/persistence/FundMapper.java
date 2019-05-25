@@ -11,7 +11,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.bukkit.entity.Player;
 
 /**
  *
@@ -44,6 +42,8 @@ public class FundMapper {
 
         //Get all values stored in files
         Arrays.asList(datafolder.listFiles()).forEach(s -> {
+            if (s.getName().endsWith(".yml"))
+                return;
             UUID temp = UUID.fromString(s.getName());
             if (players.contains(temp)) {
                 funds.put(temp, readFile(s));
