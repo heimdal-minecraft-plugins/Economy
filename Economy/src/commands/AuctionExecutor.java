@@ -4,6 +4,7 @@ import domain.Auction;
 import econMain.Main;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,6 +35,8 @@ public class AuctionExecutor implements CommandExecutor {
             cs.sendMessage("You're not a player!");
             return true;
         }
+        
+        System.out.println("Auction command used");
 
         p = (Player) cs;
 
@@ -42,12 +45,14 @@ public class AuctionExecutor implements CommandExecutor {
         switch (args.length) {
             //auc
             case 0:
+                System.out.println("0 arg");
                 displayHelpMessage();
                 return true;
             //auc info
             //auc time
             case 1:
-                switch (args[1].toLowerCase()) {
+                System.out.println("1 arg");
+                switch (args[0].toLowerCase()) {
                     case "info":
                         displayHelpMessage();
                         return true;
@@ -63,21 +68,26 @@ public class AuctionExecutor implements CommandExecutor {
                 }
             //auc amount price
             case 2:
-                if (args[1].equalsIgnoreCase("bid")) //If it's a bid
+                System.out.println("2 args");
+                if (args[0].equalsIgnoreCase("bid")){//If it's a bid
+                    System.out.println("Bid");
                     return bidOnAuction(p, args);
-
-                try {
-                    int amount = Integer.parseInt(args[0]);
-                    double price = Double.parseDouble(args[1]);
-
-                    if (!plugin.hasAuction()) {
-                        p.sendMessage(ChatColor.RED + "No auction going at the moment!");
-                        return true;
-                    }
-                    createAuction(amount, price, p);
-                } catch (NumberFormatException e) {
-                    displayHelpMessage(true);
                 }
+                else
+                    try {
+                        int amount = Integer.parseInt(args[0]);
+                        double price = Double.parseDouble(args[1]);
+
+                        if (plugin.hasAuction()) {
+                            p.sendMessage(ChatColor.RED + "There's already an auction active at the moment!");
+                            return true;
+                        }
+                        
+                        System.out.println("Creating auction");
+                        createAuction(amount, price, p);
+                    } catch (NumberFormatException e) {
+                        displayHelpMessage(true);
+                    }
                 return true;
 
         }
@@ -152,9 +162,14 @@ public class AuctionExecutor implements CommandExecutor {
                 items.add(new ItemStack(item.getType(), min));
                 temp -= min;
             }
+            System.out.println("Items found:");
+            System.out.println(items.stream().map(ItemStack::getAmount).collect(Collectors.toList()));
         }
+        
+        System.out.println("Items obtained");
 
         plugin.setAuc(new Auction(p, price, items, plugin.getConfig().getLong("auctionTime") * 1000, plugin));
+        plugin.startAuction();
     }
 
     private void cancelAuction(Player p) {

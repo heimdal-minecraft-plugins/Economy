@@ -75,10 +75,10 @@ public class Auction {
                 if (highestBidder == null) {//If no one has bid
                     seller.sendMessage(ChatColor.YELLOW + "No bidders for this auction. Returning your items.");
                     addItemsToInventory(seller);//Returns items
-                    return;
-                }
-                finishAuction();//Finishes the auctions
+                } else
+                    finishAuction();//Finishes the auctions
 
+                System.out.println("Removing auction");
                 remove();
             }
         };
@@ -228,8 +228,9 @@ public class Auction {
     private void remove() {
         timer.cancel();//Kills the timer
         timer.purge();//Purges cancelled tasks
-
+        System.out.println("Removed timer");
         plugin.removeAuction();//Removes this Auction
+        System.out.println("Removed auction");
     }
 
     public Player getSeller() {

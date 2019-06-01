@@ -1,6 +1,6 @@
 negativeFundsAllowed: false
 #Default is false
-auctionTime: 30
+auctionTime: 10
 #Default is 30 sec
 startFunds: 200
 #Default is 200

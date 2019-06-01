@@ -19,26 +19,27 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author Nick
  */
 public class FundMapper {
-
+    
     private Main plugin;
     private File datafolder;
-
+    
     public FundMapper(Main plugin) {
         this.plugin = plugin;
         datafolder = plugin.getDataFolder();
         if (datafolder == null)
             datafolder.mkdir();
     }
-
+    
     public Map<UUID, Double> getFunds() {
         Map<UUID, Double> funds = new HashMap<>();
-        List<UUID> players = (List) plugin.getServer().getOnlinePlayers();
+        List<UUID> players = (List) plugin.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).collect(Collectors.toList());
 
         //Get all values stored in files
         Arrays.asList(datafolder.listFiles()).forEach(s -> {
@@ -51,9 +52,9 @@ public class FundMapper {
         });
 
         //Add 0 values for players not stored in funds
-        funds.keySet().forEach(s-> players.remove(s));
+        funds.keySet().forEach(s -> players.remove(s));
         players.forEach(s -> funds.put(s, 0D));
-
+        
         return funds;
     }
 
@@ -70,11 +71,11 @@ public class FundMapper {
         if (value < 0 && !plugin.getConfig().getBoolean("negativeFundsAllowed"))//If value is negative but negative values aren't allowed
             throw new IllegalArgumentException("Negative funds not allowed");
         List<File> files = Arrays.asList(datafolder.listFiles());
-
+        
         File f = (files.stream().anyMatch(s -> s.getName().equals(id.toString())))
                 ? files.get(files.stream().map(File::getName).collect(Collectors.toList()).indexOf(id.toString()))
                 : new File(datafolder, id.toString());
-
+        
         try (DataOutputStream stream = new DataOutputStream(new FileOutputStream(f, false))) {
             stream.writeDouble(value);
         } catch (Exception e) {
@@ -92,7 +93,7 @@ public class FundMapper {
     public void changeFunds(UUID id) throws IllegalArgumentException {
         changeFunds(id, this.plugin.getConfig().getDouble("startFunds"));
     }
-
+    
     private Double readFile(File s) {
         try (DataInputStream stream = new DataInputStream(new FileInputStream(s))) {
             return stream.readDouble();
@@ -100,5 +101,5 @@ public class FundMapper {
             return 0D;
         }
     }
-
+    
 }

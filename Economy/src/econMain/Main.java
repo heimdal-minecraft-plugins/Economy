@@ -76,11 +76,8 @@ public class Main extends JavaPlugin {
      *
      * @return False if there was no auction, else true.
      */
-    public boolean removeAuction() {
-        if (this.auc == null)
-            return false;
+    public void removeAuction() {
         this.auc = null;
-        return true;
     }
 
     /**
@@ -90,6 +87,12 @@ public class Main extends JavaPlugin {
      */
     public void setAuc(Auction auc) {
         this.auc = auc;
+    }
+    
+    public void startAuction(){
+        if(this.auc==null)
+            return;
+        this.auc.startAuction();
     }
 
     private void loadConfig() {
