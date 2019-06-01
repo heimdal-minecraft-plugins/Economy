@@ -67,8 +67,8 @@ public class AuctionExecutor implements CommandExecutor {
                     return bidOnAuction(p, args);
 
                 try {
-                    int amount = Integer.parseInt(args[1]);
-                    double price = Double.parseDouble(args[2]);
+                    int amount = Integer.parseInt(args[0]);
+                    double price = Double.parseDouble(args[1]);
 
                     if (!plugin.hasAuction()) {
                         p.sendMessage(ChatColor.RED + "No auction going at the moment!");

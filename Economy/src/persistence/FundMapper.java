@@ -42,7 +42,7 @@ public class FundMapper {
 
         //Get all values stored in files
         Arrays.asList(datafolder.listFiles()).forEach(s -> {
-            if (s.getName().endsWith(".yml"))
+            if (s.getName().contains(".yml"))
                 return;
             UUID temp = UUID.fromString(s.getName());
             if (players.contains(temp)) {
@@ -51,7 +51,7 @@ public class FundMapper {
         });
 
         //Add 0 values for players not stored in funds
-        players.removeAll(funds.keySet());
+        funds.keySet().forEach(s-> players.remove(s));
         players.forEach(s -> funds.put(s, 0D));
 
         return funds;

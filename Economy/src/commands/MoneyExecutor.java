@@ -65,9 +65,9 @@ public class MoneyExecutor implements CommandExecutor {
                         if (!pay(p, args))
                             displayHelpMessage(true);
                         return true;
-                        //TODO
-                        //Add money
-                        //Config?
+                    //TODO
+                    //Add money
+                    //Config?
                 }
         }
 
@@ -97,17 +97,17 @@ public class MoneyExecutor implements CommandExecutor {
     private boolean pay(Player p, String[] args) {
         if (args.length != 3)
             return false;
-        Player other = plugin.getServer().getPlayer(args[2]);
+        Player other = plugin.getServer().getPlayer(args[1]);
         double amount = 0D;
         try {
-            amount = Double.parseDouble(args[3]);
+            amount = Double.parseDouble(args[2]);
         } catch (NumberFormatException e) {
-            p.sendMessage(ChatColor.RED + "'" + args[3] + "' is not a valid number!");
+            p.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a valid number!");
             return true;
         }
 
         if (other == null) {
-            p.sendMessage(ChatColor.RED + "Player '" + args[2] + "' doesn't seem to exist!");
+            p.sendMessage(ChatColor.RED + "Player '" + args[1] + "' doesn't seem to exist!");
             return true;
         }
 
